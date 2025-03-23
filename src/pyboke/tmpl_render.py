@@ -104,9 +104,16 @@ def get_rss_articles(
             md_content = md_content.replace("](pics/", f"]({blog_cfg.img_prefix}pics/")
             md_content = md_content.replace("](../output/pics/", f"]({blog_cfg.img_prefix}pics/")
             for pair in art_cfg.pairs:
-                md_text = md_text.replace(pair[0], pair[1], 1)
+                md_content = md_content.replace(pair[0], pair[1], 1)
 
-        html_content = markdown.markdown(md_content)
+        html_content = markdown.markdown(
+            md_content,
+            extensions=[
+                'markdown.extensions.fenced_code',
+                'markdown.extensions.tables',
+                'markdown.extensions.codehilite'
+    ]
+)
         #if len(html_content) > RSS_Content_Size:
             #html_content = html_content[:RSS_Content_Size] + "..."
         art["content"] = html_content
