@@ -10,9 +10,9 @@ Static Blog Generator (极简博客生成器)
 
 ## 此版本添加的功能
 
--  包含图片的全文 RSS，需要在 blog.toml 里填写图片地址前缀
+-  包含图片的全文 RSS，需要在 blog.toml 里填写图片地址前缀，或者直接使用图床
 -  文章页面底部添加了导航栏，快速跳转到上一篇、下一篇文章
--  在博客主页添加了文章摘要，此摘要默认为文章的前 200 个字符，纯文本内容，生成 metadata.toml 之后可以自行修改
+-  在博客主页添加了文章摘要预览，此摘要默认为文章的前 200 个字符，纯文本内容，生成 metadata.toml 之后可以自行修改
 
 博客示例： https://yinan.me/
 
@@ -277,6 +277,8 @@ toml 文件中的 `ignored` 修改为 `true`.
 
 如果不搜索文章正文内容，只搜索文章标题，可打开网页 title-index.html(标题索引),
 按 `Ctrl+F` 在页面内搜索。
+
+另外如果你想要在博客页面加入全文搜索功能，推荐使用 [Pagefind](https://pagefind.app)。这是一个静态的搜索库，只需要修改 templates/index.html 或者甚至 base.html，加上一段搜索框 UI 的代码，在实际部署前为 output 文件夹生成 pagefind index 即可，效果可见[我的博客](https://yinan.me)。
 
 ## 建议使用终端文本编辑器
 
