@@ -32,6 +32,7 @@ tmplfile = dict(
     random      = "random.html",
     title_index = "title-index.html",
     rss         = RSS_Atom_XML,
+    sitemap     = "sitemap.xml",
 )
 
 def find_next_article(art: ArticleConfig, all_arts):
@@ -79,6 +80,43 @@ def really_render_rss(articles, blog_cfg, force):
     RSS_Path.write_text(xml, encoding="utf-8")
     blog_cfg.rss_updated = model.now()
     render_blog_config(blog_cfg)
+
+
+def render_sitemap(all_articles, blog_cfg, force):
+    """Generate sitemap.xml if website is configured"""
+    if not blog_cfg.website or blog_cfg.website == "在此填写博客网址":
+        return
+    
+    # Generate sitemap (follows same logic as RSS generation)
+    really_render_sitemap(all_articles, blog_cfg, force)
+
+
+def really_render_sitemap(all_articles, blog_cfg, force):
+    """Actually render the sitemap.xml file"""
+    sitemap_path = Output_Folder_Path.joinpath("sitemap.xml")
+    
+    # Prepare articles with only non-ignored ones
+    visible_articles = ignore_articles(all_articles)
+    
+    # Format dates to W3C datetime format (ISO 8601)
+    for art in visible_articles:
+        # Convert RFC3339 to ISO 8601 date format (YYYY-MM-DD)
+        art['mtime'] = art['mtime'][:10] if art['mtime'] else blog_cfg.blog_updated[:10]
+    
+    blog_updated_iso = blog_cfg.blog_updated[:10] if blog_cfg.blog_updated else model.now()[:10]
+    
+    # Clean website URL (remove trailing slash if present)
+    website_url = blog_cfg.website.rstrip('/')
+    
+    tmpl = jinja_env.get_template(tmplfile["sitemap"])
+    sitemap_xml = tmpl.render(dict(
+        website=website_url,
+        blog_updated=blog_updated_iso,
+        articles=visible_articles
+    ))
+    
+    print(f"render and write {sitemap_path}")
+    sitemap_path.write_text(sitemap_xml, encoding="utf-8")
 
 
 def get_rss_articles(
@@ -287,6 +325,7 @@ def delete_articles(all_md_files):
 def update_index_rss(blog_cfg, force=False):
     all_arts = get_all_articles()
     render_rss(all_arts, blog_cfg, force=force)
+    render_sitemap(all_arts, blog_cfg, force=force)
 
     all_arts = ignore_articles(all_arts)
     all_arts = sort_articles(all_arts, key="ctime")
