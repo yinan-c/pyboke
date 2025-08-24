@@ -33,6 +33,7 @@ tmplfile = dict(
     title_index = "title-index.html",
     rss         = RSS_Atom_XML,
     sitemap     = "sitemap.xml",
+    robots      = "robots.txt",
 )
 
 def find_next_article(art: ArticleConfig, all_arts):
@@ -89,6 +90,23 @@ def render_sitemap(all_articles, blog_cfg, force):
     
     # Generate sitemap (follows same logic as RSS generation)
     really_render_sitemap(all_articles, blog_cfg, force)
+    
+    # Also generate robots.txt with proper sitemap URL
+    render_robots_txt(blog_cfg)
+
+
+def render_robots_txt(blog_cfg):
+    """Generate robots.txt with proper sitemap URL"""
+    robots_path = Output_Folder_Path.joinpath("robots.txt")
+    
+    # Clean website URL (remove trailing slash if present)
+    website_url = blog_cfg.website.rstrip('/')
+    
+    tmpl = jinja_env.get_template(tmplfile["robots"])
+    robots_txt = tmpl.render(dict(website=website_url))
+    
+    print(f"render and write {robots_path}")
+    robots_path.write_text(robots_txt, encoding="utf-8")
 
 
 def really_render_sitemap(all_articles, blog_cfg, force):

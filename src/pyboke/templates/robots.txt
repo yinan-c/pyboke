@@ -1,0 +1,6 @@
+# Robots.txt for PyBoke
+User-agent: *
+Allow: /
+
+# Sitemap location (update with your full URL)
+Sitemap: {{website}}/sitemap.xml
