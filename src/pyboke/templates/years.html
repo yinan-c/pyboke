@@ -2,6 +2,9 @@
 
 {% block title%}
   <title>{{ year }} - {{ blog.name }}</title>
+  {% if blog.website and blog.website != "在此填写博客网址" %}
+  <link rel="canonical" href="{{ blog.website.rstrip('/') }}/years.html" />
+  {% endif %}
 {% endblock %}
 
 {% block main %}

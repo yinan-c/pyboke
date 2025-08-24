@@ -292,6 +292,7 @@ def render_article_html(
     art = asdict(art_cfg)
     index_id = art["title"][:Title_Index_Length].encode().hex()
     art["index_id"] = f"i{index_id}"
+    art["id"] = html_path.stem  # Add article ID from HTML filename
     art["content"] = mistune.html(md_text)
     if next_art_cfg:
         art["next"] = next_art_cfg

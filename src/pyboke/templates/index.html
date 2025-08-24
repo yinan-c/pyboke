@@ -5,6 +5,9 @@
 {% if blog.description %}
 <meta name="description" content="{{ blog.description }}" />
 {% endif %}
+{% if blog.website and blog.website != "在此填写博客网址" %}
+<link rel="canonical" href="{{ blog.website.rstrip('/') }}/" />
+{% endif %}
 {% endblock %}
 
 {% block main %}

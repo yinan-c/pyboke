@@ -7,6 +7,9 @@
   {% elif art.summary %}
   <meta name="description" content="{{ art.summary }}" />
   {% endif %}
+  {% if blog.website and blog.website != "在此填写博客网址" %}
+  <link rel="canonical" href="{{ blog.website.rstrip('/') }}/{{ art.id }}.html" />
+  {% endif %}
 {% endblock %}
 
 {% block style %}
