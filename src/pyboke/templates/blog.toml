@@ -6,6 +6,9 @@ name = '''{{cfg.name}}'''
 # [必填] 博客作者
 author = '''{{cfg.author}}'''
 
+# [可选] 博客描述 (meta description)
+description = '''{{cfg.description}}'''
+
 # 首页 "最近文章" 列表中的项目上限
 home_recent_max = {{cfg.home_recent_max}}
 

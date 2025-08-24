@@ -2,6 +2,11 @@
 
 {% block title%}
   <title>{{ art.title }} - {{ blog.name }}</title>
+  {% if art.abstract %}
+  <meta name="description" content="{{ art.abstract }}" />
+  {% elif art.summary %}
+  <meta name="description" content="{{ art.summary }}" />
+  {% endif %}
 {% endblock %}
 
 {% block style %}

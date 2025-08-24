@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block title %}
+<title>{{ blog.name }}</title>
+{% if blog.description %}
+<meta name="description" content="{{ blog.description }}" />
+{% endif %}
+{% endblock %}
+
 {% block main %}
 <header>
   <h1>{{ blog.name }}</h1>

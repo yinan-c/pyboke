@@ -76,6 +76,7 @@ class BlogConfig:
     img_prefix       : str   # 图片地址前缀
     img_max_width    : str   # HTML中的图片的最大宽度
     current_theme    : str   # 当前主题 (CSS)
+    description      : str   # 博客描述，meta description
 
     @classmethod
     def default(cls):
@@ -93,12 +94,16 @@ class BlogConfig:
             img_prefix       = "",
             img_max_width    = "100%",
             current_theme    = "simple",
+            description      = "",  # 可选的博客描述
         )
 
     @classmethod
     def loads(cls):
         """Loads BlogConfig from Blog_Config_Path"""
         data = tomli_loads(Blog_Config_Path)
+        # Handle backward compatibility for description field
+        if 'description' not in data:
+            data['description'] = ""
         return BlogConfig(**data)
 
 
@@ -157,6 +162,11 @@ class ArticleConfig:
     def loads(cls, file):
         """Loads ArticleConfig from an article.toml file."""
         data = tomli_loads(file)
+        # Handle backward compatibility for new fields
+        if 'abstract' not in data:
+            data['abstract'] = ""
+        if 'summary' not in data:
+            data['summary'] = ""
         return ArticleConfig(**data)
 
     def copy(self):
