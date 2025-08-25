@@ -2,7 +2,7 @@ import hashlib
 import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
-import markdown 
+import mistune
 from bs4 import BeautifulSoup
 
 import arrow
@@ -253,7 +253,9 @@ def get_md_title(md_first_line: str, max_bytes: int) -> str:
     return utf8_byte_truncate(title, max_bytes).strip()
 
 def md_to_text(md):
-    html = markdown.markdown(md)
+    # Use mistune for consistent markdown rendering with strikethrough support
+    markdown_renderer = mistune.create_markdown(plugins=['strikethrough', 'table'])
+    html = markdown_renderer(md)
     soup = BeautifulSoup(html, features='html.parser')
     return soup.get_text()
 

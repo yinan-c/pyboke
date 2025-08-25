@@ -4,7 +4,6 @@ from pathlib import Path
 
 import jinja2
 import mistune
-import markdown
 
 from . import model
 from .model import RSS_Atom_XML, Blog_Config_Filename, Blog_Config_Path, \
@@ -162,14 +161,9 @@ def get_rss_articles(
             for pair in art_cfg.pairs:
                 md_content = md_content.replace(pair[0], pair[1], 1)
 
-        html_content = markdown.markdown(
-            md_content,
-            extensions=[
-                'markdown.extensions.fenced_code',
-                'markdown.extensions.tables',
-                'markdown.extensions.codehilite'
-    ]
-)
+        # Use mistune for consistent markdown rendering with strikethrough support
+        markdown_renderer = mistune.create_markdown(plugins=['strikethrough', 'table'])
+        html_content = markdown_renderer(md_content)
         #if len(html_content) > RSS_Content_Size:
             #html_content = html_content[:RSS_Content_Size] + "..."
         art["content"] = html_content
@@ -311,7 +305,9 @@ def render_article_html(
     index_id = art["title"][:Title_Index_Length].encode().hex()
     art["index_id"] = f"i{index_id}"
     art["id"] = html_path.stem  # Add article ID from HTML filename
-    art["content"] = mistune.html(md_text)
+    # Create markdown renderer with strikethrough support
+    markdown_renderer = mistune.create_markdown(plugins=['strikethrough'])
+    art["content"] = markdown_renderer(md_text)
     if next_art_cfg:
         art["next"] = next_art_cfg
     if prev_art_cfg:
